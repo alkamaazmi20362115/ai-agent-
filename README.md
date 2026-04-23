@@ -16,7 +16,7 @@ This repository contains a full Employee Management System with:
 ## Backend Setup
 
 ```bash
-cd /home/runner/work/ai-agent-/ai-agent-/backend
+cd backend
 npm install
 npm run start
 ```
@@ -35,7 +35,7 @@ API runs at `http://localhost:3000`.
 ## Frontend Setup
 
 ```bash
-cd /home/runner/work/ai-agent-/ai-agent-/frontend
+cd frontend
 npm install
 npm run dev
 ```

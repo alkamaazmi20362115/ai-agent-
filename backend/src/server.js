@@ -4,10 +4,20 @@ const path = require('path');
 const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const { rateLimit } = require('express-rate-limit');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(
+  '/api',
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 300,
+    standardHeaders: true,
+    legacyHeaders: false,
+  }),
+);
 
 let db;
 
@@ -43,8 +53,13 @@ function validateEmployeePayload(payload) {
     }
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(payload.email)) {
+  const email = String(payload.email).trim();
+  const atIndex = email.indexOf('@');
+  const dotAfterAt = email.lastIndexOf('.');
+  const isValidEmail =
+    atIndex > 0 && dotAfterAt > atIndex + 1 && dotAfterAt < email.length - 1;
+
+  if (!isValidEmail) {
     return 'email must be a valid email address';
   }
 
@@ -154,7 +169,9 @@ app.delete('/api/employees/:id', async (req, res, next) => {
   }
 });
 
+/** Global error handler for uncaught route and middleware errors. */
 app.use((err, req, res, next) => {
+  console.error(err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
