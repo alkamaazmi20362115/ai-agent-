@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
+import ImageEnhancer from './ImageEnhancer'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
@@ -113,6 +114,8 @@ function App() {
       <h1>Employee Management System</h1>
 
       {error && <p className="error">{error}</p>}
+
+      <ImageEnhancer />
 
       <section className="panel">
         <h2>{editingId ? `Edit Employee #${editingId}` : 'Add Employee'}</h2>
